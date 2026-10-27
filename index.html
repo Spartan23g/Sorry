@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PERDOOON 🌸</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe4e9 100%);
+            font-family: 'Quicksand', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Sistema de Capas */
+        .capa {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 440px;
+            width: 90%;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        .capa.activa {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Capa 1: El Corazón Inicial */
+        .btn-corazon {
+            background: #ffffff;
+            border: 4px dashed #ffb6c1;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            font-size: 55px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 182, 193, 0.4);
+            animation: latido 1.5s infinite ease-in-out;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-corazon:hover {
+            transform: scale(1.1);
+            background-color: #fffaf0;
+            border-color: #ff8da1;
+        }
+
+        @keyframes latido {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        .texto-inicial {
+            color: #c75c7c;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        /* Tarjetas de My Melody / Mensajes */
+        .card-melody {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            border: 3px solid #ffb6c1;
+            padding: 25px 20px;
+            box-shadow: 0 15px 35px rgba(216, 112, 147, 0.15);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .melody-img {
+            width: 150px;
+            height: auto;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.1));
+        }
+
+        .burbuja-texto {
+            background: #ffffff;
+            border: 2px solid #ffc0cb;
+            border-radius: 20px;
+            padding: 15px;
+            color: #6b4c53;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            width: 100%;
+            box-sizing: border-box;
+            text-align: left;
+        }
+
+        /* Reproductor Manual */
+        .reproductor-box {
+            background: #faf0f2;
+            padding: 12px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        audio {
+            width: 100%;
+            height: 30px;
+        }
+
+        /* Zona de Minijuego: Atrapa Corazones */
+        .zona-juego {
+            width: 100%;
+            height: 160px;
+            background: #fff5f7;
+            border: 2px dashed #ffb6c1;
+            border-radius: 15px;
+            position: relative;
+            margin: 15px 0;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+
+        .corazon-activo {
+            position: absolute;
+            font-size: 32px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s;
+        }
+        .corazon-activo:active { transform: scale(0.8); }
+
+        /* Botones estilo aesthetic */
+        .btn-rosa {
+            background: linear-gradient(135deg, #ffb6c1 0%, #ff8da1 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 6px 15px rgba(255, 141, 161, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .btn-rosa:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 141, 161, 0.6);
+        }
+
+        /* Rompecabezas 3x3 por intercambio visual (Fondo Blanco) */
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            background: #ffffff;
+            border: 3px solid #ffb6c1;
+            padding: 4px;
+            border-radius: 15px;
+            width: 225px;
+            height: 225px;
+            margin: 12px auto;
+        }
+
+        .puzzle-tile {
+            background-color: #ffffff;
+            background-image: url('img/melody_puzzle.png');
+            background-size: 225px 225px;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 73px;
+            height: 73px;
+            transition: transform 0.1s, border 0.1s;
+        }
+
+        .puzzle-tile.seleccionada {
+            border: 3px solid #ff758c;
+            transform: scale(0.95);
+        }
+
+        /* Decisiones Sí/No */
+        .contenedor-decisiones {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            position: relative;
+            min-height: 60px;
+        }
+
+        #btn-si {
+            background: #ff758c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 5;
+        }
+
+        #btn-no {
+            background: #cccccc;
+            color: #555;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CAPA 1: El Corazón Inicial -->
+    <div id="capa1" class="capa activa">
+        <button class="btn-corazon" onclick="siguienteCapa('capa2')"><span>💗</span></button>
+        <p class="texto-inicial">Toca el corazón con cariño ✨</p>
+    </div>
+
+    <!-- CAPA 2: Melody Mensajera + Música Manual -->
+    <div id="capa2" class="capa">
+        <div class="card-melody">
+            <img src="img/melody_hola.png" alt="My Melody Saludando" class="melody-img">
+            <div class="burbuja-texto">
+                <p style="margin:0;">¡Oliiis Hilary! Me enviaron como mensajera para darte un súper mensaje... pero antes, ponle play a tu música de fondo y sigamos 🎵🌸</p>
+            </div>
+            
+            <div class="reproductor-box">
+                <audio controls>
+                    <source src="cancion.mp3" type="audio/mpeg">
+                    Tu navegador no soporta audio.
+                </audio>
+            </div>
+
+            <button class="btn-rosa" onclick="siguienteCapa('capa3'); iniciarMinijuegoCorazones();">Continuar al juego ➔</button>
+        </div>
+    </div>
+
+    <!-- CAPA 3: Minijuego Atrapa Corazones -->
+    <div id="capa3" class="capa">
+        <div class="card-melody">
+            <h3 style="color: #c75c7c; margin-top:0;">Minijuego de corazones 💖</h3>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 5px;">Atrapa 4 corazoncitos para desbloquear el siguiente nivel:</p>
+            <p id="contador-juego" style="font-weight: bold; color: #ff758c; margin: 5px 0;">Atrapados: 0 / 4</p>
+            
+            <div id="zona-juego" class="zona-juego"></div>
+        </div>
+    </div>
+
+    <!-- CAPA 4: Melody Delata que Gabriel la envió porque está molesta -->
+    <div id="capa4" class="capa">
+        <div class="card-melody">
+            <img src="img/melody_chismosa.png" alt="My Melody Chismosa" class="melody-img">
+            <div class="burbuja-texto">
+                <p style="margin:0;">Por cierto... te cuento un secreto: Gabriel me mandó a buscarte porque sabe perfectamente que estás molesta con él. ¡Viene a disculparse! 🤭</p>
+            </div>
+            <button class="btn-rosa" onclick="siguienteCapa('capa5'); iniciarRompecabezasIntercambio();">Aceptar rompecabezas 🧩</button>
+        </div>
+    </div>
+
+    <!-- CAPA 5: Minijuego Rompecabezas 3x3 Intercambio Visual (Fondo Blanco) -->
+    <div id="capa5" class="capa">
+        <div class="card-melody">
+            <h3 style="color: #c75c7c; margin-top:0;">Arma el rompecabezas 🧩</h3>
+            <p style="font-size: 0.8rem; color: #666; margin: 0 0 5px 0;">Toca una pieza y luego otra para intercambiarlas:</p>
+            
+            <div class="puzzle-grid" id="puzzleBoard"></div>
+            
+            <p id="puzzleStatus" style="font-size: 0.8rem; color: #ff758c; font-weight: bold; margin: 5px 0;">Ordena la imagen de My Melody</p>
+            
+            <!-- Botón de continuación manual al completar -->
+            <button id="btnSiguientePuzzle" class="btn-rosa" style="display: none; margin-top: 5px;" onclick="siguienteCapa('capa6')">Continuar ➔</button>
+        </div>
+    </div>
+
+    <!-- CAPA 6: Melody Opina y da el mensaje de disculpa -->
+    <div id="capa6" class="capa">
+        <div class="card-melody">
+            <img src="img/melody_chismosa.png" alt="My Melody" class="melody-img">
+            <div class="burbuja-texto">
+                <p style="margin:0;">¡Ay, qué lindo lo armaste! Aunque ya me enteré lo que hizo, sí se pasó de tonto... Ahora me mandó a decirte esto (Yo que tú, no le hago caso): Perdón por cómo te hablé y por haberte hecho callar la vez pasada. De verdad no fue mi intención responderte así. 🥺</p>
+            </div>
+            <button class="btn-rosa" onclick="siguienteCapa('capa7')">Ver respuesta final ❤️</button>
+        </div>
+    </div>
+
+    <!-- CAPA 7: Pregunta Final Sí / No Travieso -->
+    <div id="capa7" class="capa">
+        <div class="card-melody">
+            <h2 style="color: #c75c7c; margin-top:0; font-size: 1.3rem;">Y entonces... ¿ME PERDONAS?</h2>
+            
+            <div class="contenedor-decisiones" id="area-botones">
+                <button id="btn-si" onclick="siguienteCapa('capa8')">SÍ</button>
+                <button id="btn-no" onclick="manejarNo()">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CAPA 8: Pantalla Final de Éxito -->
+    <div id="capa8" class="capa">
+        <div class="card-melody">
+            <img src="img/melody_final.png" alt="My Melody Feliz" class="melody-img" style="width: 160px;">
+            <div class="burbuja-texto" style="text-align: center;">
+                <p style="margin:0; font-size: 1.1rem; font-weight: bold; color: #ff758c;">¡Ya sabía que me ibas a perdonar! 💖✨</p>
+            </div>
+            <button class="btn-rosa" onclick="reiniciar()">Volver a empezar ↺</button>
+        </div>
+    </div>
+
+    <script>
+        function siguienteCapa(idCapaDestino) {
+            document.querySelectorAll('.capa').forEach(capa => {
+                capa.classList.remove('activa');
+            });
+            document.getElementById(idCapaDestino).classList.add('activa');
+        }
+
+        function reiniciar() {
+            contadorClicksNo = 0;
+            document.getElementById('btn-si').style.transform = 'scale(1)';
+            document.getElementById('btn-no').style.position = 'static';
+            document.getElementById('btn-no').style.display = 'inline-block';
+            document.getElementById('btnSiguientePuzzle').style.display = 'none';
+            siguienteCapa('capa1');
+        }
+
+        // --- LÓGICA DEL MINIJUEGO DE ATRAPA CORAZONES ---
+        let corazonesAtrapados = 0;
+        const metaCorazones = 4;
+
+        function iniciarMinijuegoCorazones() {
+            corazonesAtrapados = 0;
+            document.getElementById('contador-juego').innerText = `Atrapados: ${corazonesAtrapados} / ${metaCorazones}`;
+            generarCorazon();
+        }
+
+        function generarCorazon() {
+            const zona = document.getElementById('zona-juego');
+            zona.innerHTML = '';
+
+            if (corazonesAtrapados >= metaCorazones) {
+                setTimeout(() => {
+                    siguienteCapa('capa4');
+                }, 400);
+                return;
+            }
+
+            const corazon = document.createElement('div');
+            corazon.className = 'corazon-activo';
+            corazon.innerHTML = '💖';
+            
+            const maxX = zona.clientWidth - 45;
+            const maxY = zona.clientHeight - 45;
+            corazon.style.left = Math.floor(Math.random() * maxX) + 'px';
+            corazon.style.top = Math.floor(Math.random() * maxY) + 'px';
+
+            corazon.onclick = function() {
+                corazonesAtrapados++;
+                document.getElementById('contador-juego').innerText = `Atrapados: ${corazonesAtrapados} / ${metaCorazones}`;
+                generarCorazon();
+            };
+
+            zona.appendChild(corazon);
+        }
+
+        // --- LÓGICA DEL ROMPECABEZAS 3x3 POR INTERCAMBIO VISUAL ---
+        let piezasPuzzle = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        let primeraPiezaSeleccionada = null;
+
+        function iniciarRompecabezasIntercambio() {
+            document.getElementById('btnSiguientePuzzle').style.display = 'none';
+            document.getElementById('puzzleStatus').innerText = 'Ordena la imagen de My Melody';
+            
+            do {
+                piezasPuzzle.sort(() => Math.random() - 0.5);
+            } while (verificarVictoriaRompecabezas());
+
+            primeraPiezaSeleccionada = null;
+            renderRompecabezasIntercambio();
+        }
+
+        function renderRompecabezasIntercambio() {
+            const container = document.getElementById('puzzleBoard');
+            container.innerHTML = '';
+
+            piezasPuzzle.forEach((valOriginal, indexActual) => {
+                let tile = document.createElement('div');
+                tile.className = 'puzzle-tile';
+
+                let origRow = Math.floor(valOriginal / 3);
+                let origCol = valOriginal % 3;
+                tile.style.backgroundPosition = `-${origCol * 73}px -${origRow * 73}px`;
+
+                if (primeraPiezaSeleccionada === indexActual) {
+                    tile.classList.add('seleccionada');
+                }
+
+                tile.onclick = () => seleccionarPieza(indexActual);
+                container.appendChild(tile);
+            });
+        }
+
+        function seleccionarPieza(index) {
+            if (primeraPiezaSeleccionada === null) {
+                primeraPiezaSeleccionada = index;
+                renderRompecabezasIntercambio();
+            } else {
+                let temp = piezasPuzzle[primeraPiezaSeleccionada];
+                piezasPuzzle[primeraPiezaSeleccionada] = piezasPuzzle[index];
+                piezasPuzzle[index] = temp;
+
+                primeraPiezaSeleccionada = null;
+                renderRompecabezasIntercambio();
+
+                if (verificarVictoriaRompecabezas()) {
+                    document.getElementById('puzzleStatus').innerText = '¡Imagen completada con éxito! 🎉';
+                    document.getElementById('btnSiguientePuzzle').style.display = 'inline-block';
+                }
+            }
+        }
+
+        function verificarVictoriaRompecabezas() {
+            for (let i = 0; i < piezasPuzzle.length; i++) {
+                if (piezasPuzzle[i] !== i) return false;
+            }
+            return true;
+        }
+
+        // --- LÓGICA DEL BOTÓN NO TRAVIESO ---
+        let contadorClicksNo = 0;
+        function manejarNo() {
+            contadorClicksNo++;
+            const btnSi = document.getElementById('btn-si');
+            const btnNo = document.getElementById('btn-no');
+
+            let escalaActual = 1 + (contadorClicksNo * 0.4);
+            btnSi.style.transform = `scale(${escalaActual})`;
+
+            if (contadorClicksNo >= 3) {
+                btnNo.style.position = 'absolute';
+                const maxX = 140;
+                const maxY = 40;
+                const randomX = (Math.random() - 0.5) * maxX;
+                const randomY = (Math.random() - 0.5) * maxY;
+                btnNo.style.transform = `translate(${randomX}px, ${randomY}px) scale(0.6)`;
+            }
+        }
+    </script>
+</body>
+</html>
